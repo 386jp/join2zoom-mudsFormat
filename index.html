@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html  >
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v4.12.0, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="assets/images/logo4.png" type="image/x-icon">
+  <meta name="description" content="">
+  
+  <title>MUDSのZoomミーティングに参加する</title>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="assets/tether/tether.min.css">
+  <link rel="stylesheet" href="assets/theme/css/style.css">
+  <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+  <script type="text/javascript">
+    window.onload = function onLoad() {
+        var c_array = getCookieArray();
+        if(c_array['dispname'] != null) {
+            document.getElementById("dispname-form1-1").value = c_array['dispname'];
+        }
+        param = GetQueryString();
+        if(param != null) {
+            var mtgid = param["id"];
+            if(mtgid != null) {
+                document.getElementById("mtgid-form1-1").value = mtgid;
+            };
+            var mtgpw = param["pw"];
+            if(mtgpw != null) {
+                document.getElementById("mtgpw-form1-1").value = mtgpw;
+            };
+            var dispname = param["name"];
+            if(dispname != null) {
+                document.getElementById("dispname-form1-1").value = dispname;
+                if(c_array['dispname'] == null) {
+                    if (zoom_form.dispname.value.indexOf('[') == 0 && zoom_form.dispname.value.indexOf(']') == 2 && zoom_form.dispname.value.indexOf(' / ') !== -1 && zoom_form.dispname.value.length - zoom_form.dispname.value.indexOf('|') == 9 && zoom_form.dispname.value.length - zoom_form.dispname.value.lastIndexOf('|') == 1) {
+                        var count = new Date('2021/3/31 23:59');
+                        document.cookie = 'dispname=' + zoom_form.dispname.value + '; expires=' + count.toUTCString();
+                        alert("アカウントの登録が完了しました。今後、MUDSのZoomセッションに接続する際は、このサイトをご利用ください。");
+                    } else {
+                        alert("表示名のルールが間違っています。Slackで配布されているアカウント登録用リンクへもう一度アクセスしてみてください。");
+                        throw new Error('アカウントエラー');
+                    }
+                } else {
+                    if(c_array['dispname'] != dispname) {
+                        document.cookie = "dispname=; max-age=0";
+                        alert("アカウントの上書き登録が行われようとされたため、アカウントの登録が解除されました。Slackで配布されているアカウント登録用リンクへもう一度アクセスしてみてください。");
+                        throw new Error('アカウントエラー');
+                    }
+                }
+            };
+            if(dispname == null && c_array['dispname'] == null) {
+                alert("アカウントの登録がまだのようです (アカウント登録はブラウザごとに行う必要があります)。Slackで配布されているアカウント登録用リンクへもう一度アクセスしてみてください。");
+                throw new Error('アカウントエラー');
+            }
+            if(mtgid != null) {
+                zoom_link();
+            }
+        }
+    }
+
+    function GetQueryString() {
+        if (1 < document.location.search.length) {
+            var query = document.location.search.substring(1);
+            var parameters = query.split('&');
+            var result = new Object();
+            for (var i = 0; i < parameters.length; i++) {
+                var element = parameters[i].split('=');
+                var paramName = decodeURIComponent(element[0]);
+                var paramValue = decodeURIComponent(element[1]);
+                result[paramName] = decodeURIComponent(paramValue);
+            }
+            return result;
+        }
+        return null;
+    }
+
+    function getCookieArray(){
+        var arr = new Array();
+        if(document.cookie != ''){
+            var tmp = document.cookie.split('; ');
+            for(var i=0;i<tmp.length;i++){
+                var data = tmp[i].split('=');
+                arr[data[0]] = decodeURIComponent(data[1]);
+            }
+        }
+        return arr;
+    }
+
+    function zoom_link(){
+        if (zoom_form.dispname.value.indexOf('[') == 0 && zoom_form.dispname.value.indexOf(']') == 2 && zoom_form.dispname.value.indexOf(' / ') !== -1 && zoom_form.dispname.value.length - zoom_form.dispname.value.indexOf('|') == 9 && zoom_form.dispname.value.length - zoom_form.dispname.value.lastIndexOf('|') == 1) {
+            if( navigator.userAgent.match(/Android/i)
+                || navigator.userAgent.match(/webOS/i)
+                || navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i)
+                || navigator.userAgent.match(/BlackBerry/i)
+                || navigator.userAgent.match(/Windows Phone/i)
+                ){
+                // Mobile Devices
+                var zoom_url_pref = "zoomus://";
+                var zoom_url = "zoom.us/join?confno=" + zoom_form.mtgid.value + "&pwd=" + zoom_form.mtgpw.value + "&zc=0&uname=" + zoom_form.dispname.value;
+                window.location.replace(encodeURI(zoom_url_pref + zoom_url));
+            }
+            else {
+                // PC or Not Detected
+                var zoom_url_pref = "zoommtg://";
+                var zoom_url = "zoom.us/join?confno=" + zoom_form.mtgid.value + "&pwd=" + zoom_form.mtgpw.value + "&zc=0&uname=" + zoom_form.dispname.value;
+                window.location.replace(encodeURI(zoom_url_pref + zoom_url));
+            }
+        } else {
+            document.cookie = "dispname=; max-age=0";
+            alert("アカウントが登録されていないか、表示名のルールが間違っています。Slackで配布されているアカウント登録用リンクへもう一度アクセスしてみてください。");
+            throw new Error('アカウントエラー');
+        }
+    };
+</script>
+</head>
+
+</head>
+<body>
+  <section class="mbr-section form1 cid-rVI5GSTimz" id="form1-1">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="title col-12 col-lg-8">
+                <h2 class="mbr-section-title align-center pb-3 mbr-fonts-style display-2">
+                    Zoomミーティングに参加する
+                </h2>
+                <h3 class="mbr-section-subtitle align-center mbr-light pb-3 mbr-fonts-style display-5">
+                    MUDSのZoomミーティングに参加します。</br>
+                    表示されている表示名を確認した後、Slack上でアナウンスされているミーティングIDとパスワード (もしあれば)を下のフォームに入力してください。
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="media-container-column col-lg-8" data-form-type="formoid">
+                <form class="mbr-form form-with-styler" name="zoom_form" onsubmit="zoom_link();return false;">
+                    <div class="row">
+                        
+                        <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
+                        </div>
+                    </div>
+                    <div class="dragArea row">
+                        <div class="col-md-4  form-group">
+                            <label for="name-form1-1" class="form-control-label mbr-fonts-style display-7">ミーティングID</label>
+                            <input type="tel" name="mtgid" class="form-control display-7" id="mtgid-form1-1" required="required" maxlength="10">
+                        </div>
+                        <div class="col-md-4  form-group">
+                            <label for="email-form1-1" class="form-control-label mbr-fonts-style display-7">パスワード (あれば)</label>
+                            <input type="password" name="mtgpw" class="form-control display-7" id="mtgpw-form1-1">
+                        </div>
+                        <div class="col-md-4  form-group">
+                            <label for="phone-form1-1" class="form-control-label mbr-fonts-style display-7">表示名</label>
+                            <input type="text" name="dispname" class="form-control display-7" id="dispname-form1-1" required="required" readonly>
+                        </div>
+                        
+                        <div class="col-md-12 input-group-btn align-center">
+                            <button type="submit" class="btn btn-primary btn-form display-4">参加する！</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <section class="engine"><a href="https://mobirise.info/c">web builder</a></section><script src="assets/web/assets/jquery/jquery.min.js"></script>
+  <script src="assets/popper/popper.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="assets/tether/tether.min.js"></script>
+  <script src="assets/smoothscroll/smooth-scroll.js"></script>
+  <script src="assets/theme/js/script.js"></script>
+
+</body>
+</html>
